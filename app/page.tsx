@@ -133,6 +133,17 @@ export default function HomePage() {
     apiKey
   ]);
 
+  useEffect(() => {
+    if (provider !== "ollama") {
+      return;
+    }
+    if (!apiKey && !rememberApiKey) {
+      return;
+    }
+    setApiKey("");
+    setRememberApiKey(false);
+  }, [provider, apiKey, rememberApiKey]);
+
   const handleLevelChange = useCallback(
     (domain: DomainKey, value: number) => {
       setLevels((prev) => {
