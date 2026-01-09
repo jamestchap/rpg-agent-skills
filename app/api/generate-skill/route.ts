@@ -1,12 +1,46 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { buildPrompt } from "../../../lib/promptBuilder";
-import { CharacterSheet, ProviderName } from "../../../lib/types";
+
+const domainKeys = [
+  "frontend",
+  "backend",
+  "testing",
+  "devops",
+  "databases",
+  "accessibility",
+  "performance",
+  "documentation"
+] as const;
+
+const domainKeySchema = z.enum(domainKeys);
+const domainLevelSchema = z.number().min(0).max(5);
+
+const characterSheetSchema = z.object({
+  className: z.string().min(1),
+  pointsTotal: z.number().min(0).max(30),
+  levels: z.object({
+    frontend: domainLevelSchema,
+    backend: domainLevelSchema,
+    testing: domainLevelSchema,
+    devops: domainLevelSchema,
+    databases: domainLevelSchema,
+    accessibility: domainLevelSchema,
+    performance: domainLevelSchema,
+    documentation: domainLevelSchema
+  }),
+  topDomains: z.array(domainKeySchema),
+  temperature: z.number().min(0).max(1),
+  style: z.object({
+    tone: z.string().min(1),
+    format: z.literal("markdown")
+  })
+});
 
 const requestSchema = z.object({
-  characterSheet: z.custom<CharacterSheet>(),
+  characterSheet: characterSheetSchema,
   providerConfig: z.object({
-    provider: z.custom<ProviderName>(),
+    provider: z.enum(["ollama", "openrouter"]),
     model: z.string().min(1),
     apiKey: z.string().optional(),
     temperature: z.number().min(0).max(1)
@@ -19,7 +53,10 @@ export async function POST(request: Request) {
     const parsed = requestSchema.safeParse(payload);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid request payload." },
+        {
+          error:
+            "Invalid request payload. Provide a valid provider and character sheet details."
+        },
         { status: 400 }
       );
     }
