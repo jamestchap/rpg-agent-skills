@@ -60,6 +60,26 @@ API keys are not stored on the server.
 - `app/api/generate-skill/route.ts`: Ollama/OpenRouter adapter.
 - `examples/sample-skill.md`: example output.
 
+## How to test generation
+
+1. Run the dev server: `npm run dev`
+2. Open `http://localhost:3000`
+3. Choose a provider (Ollama or OpenRouter), model, and temperature mode.
+4. Click **Generate SKILL.md**.
+5. Confirm the validation line shows ✅ “Valid YAML header found.”
+
 ## Testing
 
 No automated tests yet.
+
+## Quick commands and key files (summary)
+
+Commands:
+- `npm install`
+- `npm run dev`
+
+Key files:
+- `app/page.tsx` (main UI)
+- `components/rpg/*` (domain cards, summary, settings, output)
+- `app/api/generate-skill/route.ts` (provider adapter)
+- `lib/*` (prompt builder, domain fragments, temperature logic)
