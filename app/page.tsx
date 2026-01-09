@@ -29,12 +29,14 @@ const DEFAULT_LEVELS: DomainLevelMap = DOMAIN_KEYS.reduce((acc, key) => {
 }, {} as DomainLevelMap);
 
 const MAX_LEVEL = 5;
+const DEFAULT_OLLAMA_MODEL = "llama3.1:8b";
+const DEFAULT_OPENROUTER_MODEL = "anthropic/claude-3.5-sonnet";
 
 export default function HomePage() {
   const [levels, setLevels] = useState<DomainLevelMap>(DEFAULT_LEVELS);
   const [pointsTotal, setPointsTotal] = useState(10);
   const [provider, setProvider] = useState<ProviderName>("ollama");
-  const [model, setModel] = useState("llama3.1:8b");
+  const [model, setModel] = useState(DEFAULT_OLLAMA_MODEL);
   const [apiKey, setApiKey] = useState("");
   const [rememberApiKey, setRememberApiKey] = useState(false);
   const [temperatureMode, setTemperatureMode] =
@@ -143,6 +145,18 @@ export default function HomePage() {
     setApiKey("");
     setRememberApiKey(false);
   }, [provider, apiKey, rememberApiKey]);
+
+  useEffect(() => {
+    if (provider === "openrouter") {
+      if (!model.trim() || model === DEFAULT_OLLAMA_MODEL) {
+        setModel(DEFAULT_OPENROUTER_MODEL);
+      }
+      return;
+    }
+    if (!model.trim() || model === DEFAULT_OPENROUTER_MODEL) {
+      setModel(DEFAULT_OLLAMA_MODEL);
+    }
+  }, [provider, model]);
 
   const handleLevelChange = useCallback(
     (domain: DomainKey, value: number) => {
