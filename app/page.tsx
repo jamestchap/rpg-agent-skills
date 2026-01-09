@@ -63,45 +63,6 @@ export default function HomePage() {
     [className, topDomains]
   );
 
-  useEffect(() => {
-    const stored = loadSettings();
-    if (!stored) {
-      return;
-    }
-    setLevels(stored.levels);
-    setPointsTotal(stored.pointsTotal);
-    setProvider(stored.provider);
-    setModel(stored.model);
-    setTemperatureMode(stored.temperatureMode);
-    setManualTemperature(stored.manualTemperature);
-    setRememberApiKey(Boolean(stored.rememberApiKey));
-    if (stored.rememberApiKey && stored.apiKey) {
-      setApiKey(stored.apiKey);
-    }
-  }, []);
-
-  useEffect(() => {
-    saveSettings({
-      levels,
-      pointsTotal,
-      provider,
-      model,
-      temperatureMode,
-      manualTemperature,
-      rememberApiKey,
-      apiKey: rememberApiKey ? apiKey : undefined
-    });
-  }, [
-    levels,
-    pointsTotal,
-    provider,
-    model,
-    temperatureMode,
-    manualTemperature,
-    rememberApiKey,
-    apiKey
-  ]);
-
   const adjustLevelsToFit = useCallback(
     (currentLevels: DomainLevelMap, nextPointsTotal: number) => {
       let newLevels = { ...currentLevels };
@@ -128,6 +89,49 @@ export default function HomePage() {
     },
     []
   );
+
+  useEffect(() => {
+    const stored = loadSettings();
+    if (!stored) {
+      return;
+    }
+    const adjustedLevels = adjustLevelsToFit(
+      stored.levels,
+      stored.pointsTotal
+    );
+    setLevels(adjustedLevels);
+    setPointsTotal(stored.pointsTotal);
+    setProvider(stored.provider);
+    setModel(stored.model);
+    setTemperatureMode(stored.temperatureMode);
+    setManualTemperature(stored.manualTemperature);
+    setRememberApiKey(Boolean(stored.rememberApiKey));
+    if (stored.rememberApiKey && stored.apiKey) {
+      setApiKey(stored.apiKey);
+    }
+  }, [adjustLevelsToFit]);
+
+  useEffect(() => {
+    saveSettings({
+      levels,
+      pointsTotal,
+      provider,
+      model,
+      temperatureMode,
+      manualTemperature,
+      rememberApiKey,
+      apiKey: rememberApiKey ? apiKey : undefined
+    });
+  }, [
+    levels,
+    pointsTotal,
+    provider,
+    model,
+    temperatureMode,
+    manualTemperature,
+    rememberApiKey,
+    apiKey
+  ]);
 
   const handleLevelChange = useCallback(
     (domain: DomainKey, value: number) => {

@@ -1,4 +1,11 @@
-import { DomainLevelMap, ProviderName, TemperatureMode } from "./types";
+import { z } from "zod";
+import { domainFragments } from "./domainFragments";
+import {
+  DomainKey,
+  DomainLevelMap,
+  ProviderName,
+  TemperatureMode
+} from "./types";
 
 export interface StoredSettings {
   levels: DomainLevelMap;
@@ -12,6 +19,28 @@ export interface StoredSettings {
 }
 
 const STORAGE_KEY = "rpg-skill-forge:v1";
+const DOMAIN_KEYS = Object.keys(domainFragments) as DomainKey[];
+const levelSchema = z.coerce.number().int().min(0).max(5);
+const levelsSchema = z
+  .object(
+    DOMAIN_KEYS.reduce((shape, key) => {
+      shape[key] = levelSchema;
+      return shape;
+    }, {} as Record<DomainKey, z.ZodType<number>>)
+  )
+  .strict();
+const settingsSchema = z
+  .object({
+    levels: levelsSchema,
+    pointsTotal: z.coerce.number().int().min(0).max(30),
+    provider: z.enum(["ollama", "openrouter"]),
+    model: z.string(),
+    temperatureMode: z.enum(["auto", "manual"]),
+    manualTemperature: z.coerce.number().min(0).max(1),
+    rememberApiKey: z.coerce.boolean(),
+    apiKey: z.string().optional()
+  })
+  .strict();
 
 export function loadSettings(): StoredSettings | null {
   if (typeof window === "undefined") {
@@ -22,7 +51,8 @@ export function loadSettings(): StoredSettings | null {
     return null;
   }
   try {
-    return JSON.parse(raw) as StoredSettings;
+    const parsed = settingsSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : null;
   } catch {
     return null;
   }
