@@ -41,8 +41,8 @@ const requestSchema = z.object({
   characterSheet: characterSheetSchema,
   providerConfig: z.object({
     provider: z.enum(["ollama", "openrouter"]),
-    model: z.string().min(1),
-    apiKey: z.string().optional(),
+    model: z.string().min(1).max(200),
+    apiKey: z.string().max(200).optional(),
     temperature: z.number().min(0).max(1)
   })
 });
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
           error:
             "Invalid request payload. Provide a valid provider and character sheet details."
         },
-        { status: 400 }
+        { status: 400, headers: { "Cache-Control": "no-store" } }
       );
     }
 
@@ -80,13 +80,16 @@ export async function POST(request: Request) {
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Ollama fetch failed.";
-        return NextResponse.json({ error: message }, { status: 502 });
+        return NextResponse.json(
+          { error: message },
+          { status: 502, headers: { "Cache-Control": "no-store" } }
+        );
       }
 
       if (!response.ok || !response.body) {
         return NextResponse.json(
           { error: "Ollama request failed. Check that Ollama is running." },
-          { status: 502 }
+          { status: 502, headers: { "Cache-Control": "no-store" } }
         );
       }
 
@@ -144,20 +147,20 @@ export async function POST(request: Request) {
         }
       });
 
-      return new Response(stream, {
-        headers: {
-          "Content-Type": "text/plain; charset=utf-8",
-          "Cache-Control": "no-cache"
-        }
-      });
-    }
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
+    });
+  }
 
-    if (!providerConfig.apiKey) {
-      return NextResponse.json(
-        { error: "OpenRouter API key is required." },
-        { status: 400 }
-      );
-    }
+  if (!providerConfig.apiKey) {
+    return NextResponse.json(
+      { error: "OpenRouter API key is required." },
+      { status: 400, headers: { "Cache-Control": "no-store" } }
+    );
+  }
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -179,7 +182,7 @@ export async function POST(request: Request) {
     if (!response.ok || !response.body) {
       return NextResponse.json(
         { error: "OpenRouter request failed. Check your API key and model." },
-        { status: 502 }
+        { status: 502, headers: { "Cache-Control": "no-store" } }
       );
     }
 
@@ -251,11 +254,14 @@ export async function POST(request: Request) {
     return new Response(stream, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-store"
       }
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: message },
+      { status: 500, headers: { "Cache-Control": "no-store" } }
+    );
   }
 }
