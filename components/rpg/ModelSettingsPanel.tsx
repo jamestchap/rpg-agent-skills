@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ProviderName, TemperatureMode } from "../../lib/types";
 
 interface ModelSettingsPanelProps {
@@ -7,6 +8,9 @@ interface ModelSettingsPanelProps {
   model: string;
   apiKey: string;
   rememberApiKey: boolean;
+  openRouterModels: Array<{ id: string; name: string }>;
+  isModelsLoading: boolean;
+  modelsError?: string;
   temperatureMode: TemperatureMode;
   manualTemperature: number;
   autoTemperature: number;
@@ -23,6 +27,9 @@ export function ModelSettingsPanel({
   model,
   apiKey,
   rememberApiKey,
+  openRouterModels,
+  isModelsLoading,
+  modelsError,
   temperatureMode,
   manualTemperature,
   autoTemperature,
@@ -34,6 +41,39 @@ export function ModelSettingsPanel({
   onManualTemperatureChange
 }: ModelSettingsPanelProps) {
   const isOpenRouter = provider === "openrouter";
+  const [isModelFocused, setIsModelFocused] = useState(false);
+  const showModelsList = isOpenRouter && openRouterModels.length > 0;
+  const normalizedModel = model.trim().toLowerCase();
+  const filteredModels = showModelsList
+    ? openRouterModels.filter((modelItem) => {
+        if (!normalizedModel) {
+          return true;
+        }
+        return (
+          modelItem.id.toLowerCase().includes(normalizedModel) ||
+          modelItem.name.toLowerCase().includes(normalizedModel)
+        );
+      })
+    : [];
+  const modelStatus = (() => {
+    if (!isOpenRouter) {
+      return "";
+    }
+    if (!apiKey.trim()) {
+      return "Add an API key to load models.";
+    }
+    if (isModelsLoading) {
+      return "Loading models...";
+    }
+    if (modelsError) {
+      return modelsError;
+    }
+    return "";
+  })();
+  const handleModelSelect = (nextModel: string) => {
+    onModelChange(nextModel);
+    setIsModelFocused(false);
+  };
 
   return (
     <div className="panel space-y-4">
@@ -53,16 +93,57 @@ export function ModelSettingsPanel({
           </select>
         </label>
         <label className="text-sm text-slate-300">
-          Model name
-          <input
-            className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
-            onChange={(event) => onModelChange(event.target.value)}
-            placeholder={
-              isOpenRouter ? "anthropic/claude-3.5-sonnet" : "gemma2:9b"
-            }
-            type="text"
-            value={model}
-          />
+          Model
+          <div className="relative">
+            <input
+              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
+              onChange={(event) => {
+                onModelChange(event.target.value);
+                setIsModelFocused(true);
+              }}
+              onFocus={() => setIsModelFocused(true)}
+              onBlur={() => setIsModelFocused(false)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setIsModelFocused(false);
+                }
+              }}
+              placeholder={
+                isOpenRouter ? "anthropic/claude-3.5-sonnet" : "gemma2:9b"
+              }
+              type="text"
+              value={model}
+            />
+            {showModelsList && isModelFocused && filteredModels.length > 0 && (
+              <div className="absolute left-0 right-0 top-full z-10 mt-2 max-h-40 overflow-auto rounded-lg border border-slate-800 bg-slate-950 shadow-lg">
+                {filteredModels.map((modelItem) => (
+                  <button
+                    className="block w-full px-3 py-2 text-left text-xs text-slate-200 hover:bg-slate-900"
+                    key={modelItem.id}
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      handleModelSelect(modelItem.id);
+                    }}
+                    type="button"
+                  >
+                    <span className="text-slate-200">{modelItem.id}</span>
+                    {modelItem.name && (
+                      <span className="text-slate-500">
+                        {" "}
+                        — {modelItem.name}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {showModelsList && filteredModels.length === 0 && normalizedModel && (
+            <p className="mt-2 text-xs text-slate-500">No matches.</p>
+          )}
+          {isOpenRouter && modelStatus && (
+            <p className="mt-2 text-xs text-slate-400">{modelStatus}</p>
+          )}
         </label>
         {isOpenRouter && (
           <div className="space-y-2">

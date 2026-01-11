@@ -170,25 +170,88 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           model: providerConfig.model,
           temperature: providerConfig.temperature,
-          messages: [{ role: "user", content: prompt }]
+          messages: [{ role: "user", content: prompt }],
+          stream: true
         })
       }
     );
 
-    if (!response.ok) {
+    if (!response.ok || !response.body) {
       return NextResponse.json(
         { error: "OpenRouter request failed. Check your API key and model." },
         { status: 502 }
       );
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? "";
-    return NextResponse.json({
-      skillMarkdown: content,
-      meta: {
-        temperatureUsed: providerConfig.temperature,
-        modelUsed: providerConfig.model
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const reader = response.body!.getReader();
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+              break;
+            }
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) {
+                continue;
+              }
+              const data = trimmed.slice(5).trim();
+              if (!data || data === "[DONE]") {
+                continue;
+              }
+              try {
+                const json = JSON.parse(data) as {
+                  choices?: Array<{
+                    delta?: { content?: string };
+                  }>;
+                };
+                const content = json.choices?.[0]?.delta?.content;
+                if (content) {
+                  controller.enqueue(encoder.encode(content));
+                }
+              } catch {
+                // Ignore malformed chunks.
+              }
+            }
+          }
+          const finalLine = buffer.trim();
+          if (finalLine.startsWith("data:")) {
+            const data = finalLine.slice(5).trim();
+            if (data && data !== "[DONE]") {
+              try {
+                const json = JSON.parse(data) as {
+                  choices?: Array<{
+                    delta?: { content?: string };
+                  }>;
+                };
+                const content = json.choices?.[0]?.delta?.content;
+                if (content) {
+                  controller.enqueue(encoder.encode(content));
+                }
+              } catch {
+                // Ignore malformed final chunk.
+              }
+            }
+          }
+        } finally {
+          controller.close();
+        }
+      }
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache"
       }
     });
   } catch (error) {

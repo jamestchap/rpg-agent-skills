@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DomainCard } from "../components/rpg/DomainCard";
 import { CharacterSummary } from "../components/rpg/CharacterSummary";
 import { PointsRemaining } from "../components/rpg/PointsRemaining";
@@ -45,6 +45,12 @@ export default function HomePage() {
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [openRouterModels, setOpenRouterModels] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [modelsError, setModelsError] = useState<string | undefined>();
+  const [isModelsLoading, setIsModelsLoading] = useState(false);
+  const previousProviderRef = useRef<ProviderName>(provider);
 
   const totalPointsUsed = useMemo(
     () => getTotalPointsUsed(levels),
@@ -147,16 +153,75 @@ export default function HomePage() {
   }, [provider, apiKey, rememberApiKey]);
 
   useEffect(() => {
+    const previousProvider = previousProviderRef.current;
+    if (provider === previousProvider) {
+      return;
+    }
     if (provider === "openrouter") {
       if (!model.trim() || model === DEFAULT_OLLAMA_MODEL) {
         setModel(DEFAULT_OPENROUTER_MODEL);
       }
-      return;
-    }
-    if (!model.trim() || model === DEFAULT_OPENROUTER_MODEL) {
+    } else if (!model.trim() || model === DEFAULT_OPENROUTER_MODEL) {
       setModel(DEFAULT_OLLAMA_MODEL);
     }
+    previousProviderRef.current = provider;
   }, [provider, model]);
+
+  useEffect(() => {
+    if (provider !== "openrouter") {
+      return;
+    }
+    if (!apiKey.trim()) {
+      setOpenRouterModels([]);
+      setModelsError(undefined);
+      setIsModelsLoading(false);
+      return;
+    }
+    let isCancelled = false;
+    setIsModelsLoading(true);
+    setModelsError(undefined);
+    fetch("/api/openrouter-models", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey })
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.error ?? "Failed to load models.");
+        }
+        return response.json();
+      })
+      .then((payload) => {
+        if (isCancelled) {
+          return;
+        }
+        const models = Array.isArray(payload.models)
+          ? payload.models.filter((modelItem) => modelItem.id)
+          : [];
+        models.sort((a, b) => a.id.localeCompare(b.id));
+        setOpenRouterModels(models);
+      })
+      .catch((error) => {
+        if (isCancelled) {
+          return;
+        }
+        setModelsError(
+          error instanceof Error ? error.message : "Failed to load models."
+        );
+        setOpenRouterModels([]);
+      })
+      .finally(() => {
+        if (isCancelled) {
+          return;
+        }
+        setIsModelsLoading(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [provider, apiKey]);
 
   const handleLevelChange = useCallback(
     (domain: DomainKey, value: number) => {
@@ -225,7 +290,8 @@ export default function HomePage() {
         return;
       }
 
-      if (provider === "ollama" && response.body) {
+      const contentType = response.headers.get("content-type") ?? "";
+      if (response.body && contentType.includes("text/plain")) {
         setOutput("");
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -345,6 +411,9 @@ export default function HomePage() {
           model={model}
           apiKey={apiKey}
           rememberApiKey={rememberApiKey}
+          openRouterModels={openRouterModels}
+          isModelsLoading={isModelsLoading}
+          modelsError={modelsError}
           temperatureMode={temperatureMode}
           manualTemperature={manualTemperature}
           autoTemperature={autoTemperature}
