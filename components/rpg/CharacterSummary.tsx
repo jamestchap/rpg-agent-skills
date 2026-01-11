@@ -17,8 +17,8 @@ export function CharacterSummary({
     <div className="panel space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-slate-400">Character summary</p>
-          <h2 className="text-2xl font-semibold text-slate-100">
+          <p className="text-sm text-ink-500">Character summary</p>
+          <h2 className="text-2xl font-semibold text-ink-900 font-display">
             {className}
           </h2>
         </div>
@@ -26,7 +26,7 @@ export function CharacterSummary({
           <span className="badge">{topDomains.length} top domains</span>
         )}
       </div>
-      <p className="text-sm text-slate-300">{flavourText}</p>
+      <p className="text-sm text-ink-600">{flavourText}</p>
     </div>
   );
 }

@@ -14,15 +14,15 @@ export function PointsRemaining({
   return (
     <div className="panel flex items-center justify-between gap-6">
       <div>
-        <p className="text-sm text-slate-400">Points remaining</p>
-        <p className="text-2xl font-semibold text-slate-100">
+        <p className="text-sm text-ink-500">Points remaining</p>
+        <p className="text-2xl font-semibold text-ink-900">
           {pointsRemaining}
         </p>
       </div>
-      <label className="text-sm text-slate-300">
+      <label className="text-sm text-ink-600">
         Total points
         <input
-          className="ml-3 w-20 rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-slate-100"
+          className="ml-3 w-20 rounded-lg border-2 border-ink-200 bg-white/90 px-2 py-1 text-ink-900"
           min={0}
           max={30}
           onChange={(event) => onChangeTotal(Number(event.target.value))}

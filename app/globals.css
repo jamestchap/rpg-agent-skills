@@ -1,23 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  --page-accent: 181 125 34;
+  --page-accent-2: 75 112 92;
+  --page-paper-1: 233 224 208;
+  --page-paper-2: 210 198 180;
+  --page-paper-3: 184 169 150;
+  --page-shadow: 53 46 42;
 }
 
 body {
-  @apply bg-slate-950 text-slate-100 font-body;
+  @apply bg-smoke-100 text-ink-900 font-body;
 }
 
 .panel {
-  @apply rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-slate-950/40;
+  @apply rounded-2xl border-2 border-smoke-400/70 bg-smoke-50 p-6 shadow-lg shadow-smoke-400/60 backdrop-blur transition-transform duration-200 ease-out;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -18px rgba(var(--page-shadow), 0.35);
 }
 
 .panel-title {
-  @apply text-lg font-semibold text-slate-100;
+  @apply text-lg font-semibold text-ink-900;
 }
 
 .badge {
-  @apply inline-flex items-center rounded-full bg-forge-500/20 px-3 py-1 text-sm text-forge-200;
+  @apply inline-flex items-center rounded-full border border-brass-200 bg-brass-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brass-800 shadow-sm;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl border-2 border-brass-600 bg-brass-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 hover:bg-brass-400;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border-2 border-smoke-300 bg-parchment-50 px-4 py-2 text-sm font-semibold text-ink-700 shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 hover:bg-smoke-100;
+}
+
+.btn-chip {
+  @apply rounded-full border-2 px-3 py-1 text-xs font-semibold transition-colors duration-150;
+}
+
+.page-sheen {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--page-accent), 0.08), transparent 50%),
+    radial-gradient(circle at 80% 0%, rgba(var(--page-accent-2), 0.08), transparent 50%),
+    radial-gradient(circle at 50% 120%, rgba(26, 38, 34, 0.2), transparent 60%),
+    linear-gradient(
+      180deg,
+      rgba(var(--page-paper-1), 1) 0%,
+      rgba(var(--page-paper-2), 1) 55%,
+      rgba(var(--page-paper-3), 1) 100%
+    );
+  background-size: auto, auto, auto, auto;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
 }

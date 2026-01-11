@@ -79,10 +79,10 @@ export function ModelSettingsPanel({
     <div className="panel space-y-4">
       <h2 className="panel-title">Model settings</h2>
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="text-sm text-slate-300">
+        <label className="text-sm text-ink-600">
           Provider
           <select
-            className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
+            className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
             onChange={(event) =>
               onProviderChange(event.target.value as ProviderName)
             }
@@ -92,11 +92,11 @@ export function ModelSettingsPanel({
             <option value="openrouter">OpenRouter</option>
           </select>
         </label>
-        <label className="text-sm text-slate-300">
+        <label className="text-sm text-ink-600">
           Model
           <div className="relative">
             <input
-              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
+              className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
               onChange={(event) => {
                 onModelChange(event.target.value);
                 setIsModelFocused(true);
@@ -115,10 +115,10 @@ export function ModelSettingsPanel({
               value={model}
             />
             {showModelsList && isModelFocused && filteredModels.length > 0 && (
-              <div className="absolute left-0 right-0 top-full z-10 mt-2 max-h-40 overflow-auto rounded-lg border border-slate-800 bg-slate-950 shadow-lg">
+              <div className="absolute left-0 right-0 top-full z-10 mt-2 max-h-40 overflow-auto rounded-lg border border-ink-200 bg-white shadow-lg">
                 {filteredModels.map((modelItem) => (
                   <button
-                    className="block w-full px-3 py-2 text-left text-xs text-slate-200 hover:bg-slate-900"
+                    className="block w-full px-3 py-2 text-left text-xs text-ink-800 hover:bg-parchment-100"
                     key={modelItem.id}
                     onMouseDown={(event) => {
                       event.preventDefault();
@@ -126,9 +126,9 @@ export function ModelSettingsPanel({
                     }}
                     type="button"
                   >
-                    <span className="text-slate-200">{modelItem.id}</span>
+                    <span className="text-ink-800">{modelItem.id}</span>
                     {modelItem.name && (
-                      <span className="text-slate-500">
+                      <span className="text-ink-500">
                         {" "}
                         — {modelItem.name}
                       </span>
@@ -139,28 +139,28 @@ export function ModelSettingsPanel({
             )}
           </div>
           {showModelsList && filteredModels.length === 0 && normalizedModel && (
-            <p className="mt-2 text-xs text-slate-500">No matches.</p>
+            <p className="mt-2 text-xs text-ink-500">No matches.</p>
           )}
           {isOpenRouter && modelStatus && (
-            <p className="mt-2 text-xs text-slate-400">{modelStatus}</p>
+            <p className="mt-2 text-xs text-ink-500">{modelStatus}</p>
           )}
         </label>
         {isOpenRouter && (
           <div className="space-y-2">
-            <label className="text-sm text-slate-300">
+            <label className="text-sm text-ink-600">
               OpenRouter API key
               <input
-                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
+                className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
                 onChange={(event) => onApiKeyChange(event.target.value)}
                 placeholder="sk-or-..."
                 type="password"
                 value={apiKey}
               />
             </label>
-            <label className="flex items-center gap-2 text-xs text-slate-400">
+            <label className="flex items-center gap-2 text-xs text-ink-500">
               <input
                 checked={rememberApiKey}
-                className="accent-forge-500"
+                className="accent-brass-500"
                 onChange={(event) => onRememberChange(event.target.checked)}
                 type="checkbox"
               />
@@ -171,13 +171,13 @@ export function ModelSettingsPanel({
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <p className="text-sm text-slate-300">Temperature mode</p>
+          <p className="text-sm text-ink-600">Temperature mode</p>
           <div className="flex gap-2">
             <button
-              className={`rounded-lg border px-3 py-1 text-sm ${
+              className={`btn-chip ${
                 temperatureMode === "auto"
-                  ? "border-forge-400 bg-forge-500/20 text-forge-100"
-                  : "border-slate-700 text-slate-300"
+                  ? "border-brass-600 bg-brass-100 text-brass-800"
+                  : "border-ink-200 text-ink-600 hover:border-ink-400"
               }`}
               onClick={() => onTemperatureModeChange("auto")}
               type="button"
@@ -185,10 +185,10 @@ export function ModelSettingsPanel({
               Auto
             </button>
             <button
-              className={`rounded-lg border px-3 py-1 text-sm ${
+              className={`btn-chip ${
                 temperatureMode === "manual"
-                  ? "border-forge-400 bg-forge-500/20 text-forge-100"
-                  : "border-slate-700 text-slate-300"
+                  ? "border-brass-600 bg-brass-100 text-brass-800"
+                  : "border-ink-200 text-ink-600 hover:border-ink-400"
               }`}
               onClick={() => onTemperatureModeChange("manual")}
               type="button"
@@ -196,14 +196,14 @@ export function ModelSettingsPanel({
               Manual
             </button>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-ink-500">
             Auto mode updates based on your build: {autoTemperature}.
           </p>
         </div>
-        <label className="text-sm text-slate-300">
+        <label className="text-sm text-ink-600">
           Manual temperature
           <input
-            className="mt-3 h-2 w-full cursor-pointer accent-forge-500"
+            className="mt-3 h-3 w-full cursor-pointer accent-brass-500"
             disabled={temperatureMode !== "manual"}
             max={1}
             min={0}
@@ -214,7 +214,7 @@ export function ModelSettingsPanel({
             type="range"
             value={manualTemperature}
           />
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-ink-500">
             Current: {manualTemperature.toFixed(2)}
           </p>
         </label>

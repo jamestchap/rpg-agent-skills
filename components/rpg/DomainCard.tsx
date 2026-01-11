@@ -25,24 +25,24 @@ export function DomainCard({
     <div className="panel flex h-full flex-col gap-4">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-400">{fragment.label}</p>
-          <h3 className="text-xl font-semibold text-slate-100">
+          <p className="text-sm text-ink-500">{fragment.label}</p>
+          <h3 className="text-xl font-semibold text-ink-900">
             {fragment.icon} {fragment.label}
           </h3>
         </div>
         <span className="badge">Lv {level}</span>
       </div>
 
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-ink-100">
         <div
-          className="h-full rounded-full bg-forge-500 transition-all"
+          className="h-full rounded-full bg-pine-500 transition-all"
           style={{ width: `${percent}%` }}
         />
       </div>
 
       <div className="flex items-center justify-between gap-2">
         <button
-          className="rounded-lg border border-slate-700 px-3 py-1 text-sm transition hover:border-slate-500"
+          className="btn-secondary px-3 py-1 text-xs"
           onClick={() => onChange(Math.max(0, level - 1))}
           disabled={level === 0}
           type="button"
@@ -51,7 +51,7 @@ export function DomainCard({
         </button>
         <input
           aria-label={`${fragment.label} level`}
-          className="h-2 w-full cursor-pointer accent-forge-500"
+          className="my-1 h-3 w-full cursor-pointer accent-brass-500"
           max={maxLevel}
           min={0}
           onChange={(event) => onChange(Number(event.target.value))}
@@ -59,7 +59,7 @@ export function DomainCard({
           value={level}
         />
         <button
-          className="rounded-lg border border-slate-700 px-3 py-1 text-sm transition hover:border-slate-500 disabled:opacity-50"
+          className="btn-secondary px-3 py-1 text-xs disabled:opacity-50"
           onClick={() => onChange(Math.min(maxLevel, level + 1))}
           disabled={level >= maxLevel || disableIncrease}
           type="button"

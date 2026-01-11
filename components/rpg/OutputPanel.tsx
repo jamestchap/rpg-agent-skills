@@ -27,21 +27,21 @@ export function OutputPanel({
         <h2 className="panel-title">SKILL.md output</h2>
         <div className="flex flex-wrap gap-2">
           <button
-            className="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200"
+            className="btn-secondary px-3 py-1"
             onClick={onCopy}
             type="button"
           >
             Copy
           </button>
           <button
-            className="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200"
+            className="btn-secondary px-3 py-1"
             onClick={onDownload}
             type="button"
           >
             Download SKILL.md
           </button>
           <button
-            className="rounded-lg border border-forge-400 bg-forge-500/20 px-3 py-1 text-sm text-forge-100"
+            className="btn-primary px-3 py-1"
             disabled={isLoading}
             onClick={onRegenerate}
             type="button"
@@ -50,22 +50,22 @@ export function OutputPanel({
           </button>
         </div>
       </div>
-      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 overflow-hidden">
-        <pre className="max-h-[360px] overflow-auto whitespace-pre-wrap break-words text-sm text-slate-200">
+      <div className="rounded-xl border border-ink-200 bg-parchment-50 p-4 overflow-hidden">
+        <pre className="max-h-[360px] overflow-auto whitespace-pre-wrap break-words text-sm text-ink-800">
           {output || "Generated SKILL.md will appear here."}
         </pre>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span
           className={`font-medium ${
-            validation.valid ? "text-emerald-300" : "text-rose-300"
+            validation.valid ? "text-emerald-700" : "text-rose-700"
           }`}
         >
           {validation.valid ? "✅ " : "❌ "}
           {validation.message}
         </span>
         {errorMessage && (
-          <span className="text-rose-300">{errorMessage}</span>
+          <span className="text-rose-700">{errorMessage}</span>
         )}
       </div>
     </div>

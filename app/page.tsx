@@ -347,23 +347,31 @@ export default function HomePage() {
   }, [output]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 px-6 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <header className="space-y-2">
-          <p className="text-sm uppercase tracking-[0.3em] text-forge-300">
-            RPG Skill Forge
-          </p>
-          <h1 className="text-3xl font-semibold text-slate-100">
+    <main className="relative min-h-screen overflow-hidden px-6 py-10">
+      <div
+        className="page-sheen pointer-events-none absolute inset-0"
+        aria-hidden="true"
+      />
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-8">
+        <header
+          className="space-y-3 animate-fade-up"
+          style={{ animationDelay: "0.05s" }}
+        >
+          <p className="badge">RPG Skill Forge</p>
+          <h1 className="text-3xl font-semibold text-ink-900 md:text-4xl font-display">
             Build your agent character sheet
           </h1>
-          <p className="text-slate-300">
+          <p className="text-base text-ink-600 md:text-lg">
             Allocate points across domains, tune your model, and forge a
             SKILL.md profile with an RPG twist.
           </p>
         </header>
 
         <section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-          <div className="space-y-6">
+          <div
+            className="space-y-6 animate-fade-up"
+            style={{ animationDelay: "0.12s" }}
+          >
             <PointsRemaining
               pointsRemaining={pointsRemaining}
               pointsTotal={pointsTotal}
@@ -382,7 +390,10 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <div className="space-y-6">
+          <div
+            className="space-y-6 animate-fade-up"
+            style={{ animationDelay: "0.18s" }}
+          >
             <CharacterSummary
               className={className}
               flavourText={flavourText}
@@ -390,12 +401,12 @@ export default function HomePage() {
             />
             <div className="panel space-y-3">
               <h2 className="panel-title">Generate SKILL.md</h2>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-ink-600">
                 Ready to forge? This uses your character sheet and temperature
                 settings.
               </p>
               <button
-                className="w-full rounded-xl border border-forge-400 bg-forge-500/30 px-4 py-3 text-sm font-semibold text-forge-100 transition hover:bg-forge-500/40"
+                className="btn-primary w-full py-3"
                 disabled={isLoading}
                 onClick={handleGenerate}
                 type="button"
