@@ -58,7 +58,7 @@ export function ModelSettingsPanel({
             className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100"
             onChange={(event) => onModelChange(event.target.value)}
             placeholder={
-              isOpenRouter ? "anthropic/claude-3.5-sonnet" : "llama3.1:8b"
+              isOpenRouter ? "anthropic/claude-3.5-sonnet" : "gemma2:9b"
             }
             type="text"
             value={model}

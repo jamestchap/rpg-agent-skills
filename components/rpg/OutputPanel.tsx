@@ -50,8 +50,8 @@ export function OutputPanel({
           </button>
         </div>
       </div>
-      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4">
-        <pre className="max-h-[360px] whitespace-pre-wrap text-sm text-slate-200">
+      <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 overflow-hidden">
+        <pre className="max-h-[360px] overflow-auto whitespace-pre-wrap break-words text-sm text-slate-200">
           {output || "Generated SKILL.md will appear here."}
         </pre>
       </div>

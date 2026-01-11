@@ -33,7 +33,7 @@ Install and run Ollama:
 
 ```bash
 ollama serve
-ollama pull llama3.1:8b
+ollama pull gemma2:9b
 ```
 
 Use the model name in the UI. The default URL is `http://localhost:11434`.
@@ -75,10 +75,12 @@ No automated tests yet.
 ## Quick commands and key files (summary)
 
 Commands:
+
 - `npm install`
 - `npm run dev`
 
 Key files:
+
 - `app/page.tsx` (main UI)
 - `components/rpg/*` (domain cards, summary, settings, output)
 - `app/api/generate-skill/route.ts` (provider adapter)

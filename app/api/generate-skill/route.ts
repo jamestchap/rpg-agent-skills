@@ -65,28 +65,89 @@ export async function POST(request: Request) {
     const prompt = buildPrompt(characterSheet);
 
     if (providerConfig.provider === "ollama") {
-      const response = await fetch("http://localhost:11434/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: providerConfig.model,
-          messages: [{ role: "user", content: prompt }],
-          temperature: providerConfig.temperature
-        })
-      });
-      if (!response.ok) {
+      let response: Response;
+      try {
+        response = await fetch("http://127.0.0.1:11434/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: providerConfig.model,
+            messages: [{ role: "user", content: prompt }],
+            temperature: providerConfig.temperature,
+            stream: true
+          })
+        });
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Ollama fetch failed.";
+        return NextResponse.json({ error: message }, { status: 502 });
+      }
+
+      if (!response.ok || !response.body) {
         return NextResponse.json(
           { error: "Ollama request failed. Check that Ollama is running." },
           { status: 502 }
         );
       }
-      const data = await response.json();
-      const content = data.message?.content ?? "";
-      return NextResponse.json({
-        skillMarkdown: content,
-        meta: {
-          temperatureUsed: providerConfig.temperature,
-          modelUsed: providerConfig.model
+
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      const stream = new ReadableStream<Uint8Array>({
+        async start(controller) {
+          const reader = response.body!.getReader();
+          try {
+            while (true) {
+              const { value, done } = await reader.read();
+              if (done) {
+                break;
+              }
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split("\n");
+              buffer = lines.pop() ?? "";
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                  continue;
+                }
+                try {
+                  const json = JSON.parse(trimmed) as {
+                    message?: { content?: string };
+                  };
+                  const content = json.message?.content;
+                  if (content) {
+                    controller.enqueue(encoder.encode(content));
+                  }
+                } catch {
+                  // Ignore malformed chunks.
+                }
+              }
+            }
+            const finalLine = buffer.trim();
+            if (finalLine) {
+              try {
+                const json = JSON.parse(finalLine) as {
+                  message?: { content?: string };
+                };
+                const content = json.message?.content;
+                if (content) {
+                  controller.enqueue(encoder.encode(content));
+                }
+              } catch {
+                // Ignore malformed final chunk.
+              }
+            }
+          } finally {
+            controller.close();
+          }
+        }
+      });
+
+      return new Response(stream, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-cache"
         }
       });
     }

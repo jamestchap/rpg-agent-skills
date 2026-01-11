@@ -29,7 +29,7 @@ const DEFAULT_LEVELS: DomainLevelMap = DOMAIN_KEYS.reduce((acc, key) => {
 }, {} as DomainLevelMap);
 
 const MAX_LEVEL = 5;
-const DEFAULT_OLLAMA_MODEL = "llama3.1:8b";
+const DEFAULT_OLLAMA_MODEL = "gemma2:9b";
 const DEFAULT_OPENROUTER_MODEL = "anthropic/claude-3.5-sonnet";
 
 export default function HomePage() {
@@ -213,11 +213,36 @@ export default function HomePage() {
         })
       });
 
-      const payload = await response.json();
       if (!response.ok) {
-        setErrorMessage(payload.error ?? "Something went wrong.");
+        let message = "Something went wrong.";
+        try {
+          const payload = await response.json();
+          message = payload.error ?? message;
+        } catch {
+          // Ignore parse failures and fall back to the default message.
+        }
+        setErrorMessage(message);
         return;
       }
+
+      if (provider === "ollama" && response.body) {
+        setOutput("");
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          const chunk = decoder.decode(value, { stream: true });
+          if (chunk) {
+            setOutput((prev) => prev + chunk);
+          }
+        }
+        return;
+      }
+
+      const payload = await response.json();
       setOutput(payload.skillMarkdown ?? "");
     } catch (error) {
       setErrorMessage(
