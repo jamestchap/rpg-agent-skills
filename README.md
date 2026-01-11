@@ -27,16 +27,42 @@ npm run dev
 
 Then open `http://localhost:3000`.
 
-## Ollama setup
+## Ollama setup (local only)
 
-Install and run Ollama:
+Using Ollama requires running the app locally because the model is served from
+your machine at `http://localhost:11434`. Follow these steps:
 
-```bash
-ollama serve
-ollama pull gemma2:9b
-```
+1. **Clone the repo and install dependencies**
 
-Use the model name in the UI. The default URL is `http://localhost:11434`.
+   ```bash
+   git clone <your-fork-or-repo-url>
+   cd rpg-agent-skills
+   npm install
+   ```
+
+2. **Start the dev server**
+
+   ```bash
+   npm run dev
+   ```
+
+   Then open `http://localhost:3000`.
+
+3. **Install and run Ollama**
+
+   ```bash
+   ollama serve
+   ollama pull <model-name>
+   ```
+
+4. **Configure the UI**
+
+   - Select **Ollama** as the provider.
+   - Use the model name you pulled (e.g. `llama3.1:8b`).
+   - Keep the base URL as `http://localhost:11434` (the default).
+
+If you see “Ollama request failed,” confirm `ollama serve` is running and that
+the model name matches what you pulled.
 
 ## OpenRouter setup
 
