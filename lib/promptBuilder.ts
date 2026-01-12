@@ -16,76 +16,75 @@ export function buildPrompt(sheet: CharacterSheet): string {
       };
     });
 
-  const instruction = `
-You are a SKILL author for an AI agent.
+  const characterSheetJson = JSON.stringify(
+    {
+      ...sheet,
+      domains
+    },
+    null,
+    2
+  );
 
-Return ONLY the contents of a valid SKILL.md file.
-Do NOT include commentary, explanations, or metadata outside the file.
+  const instructionTemplate = `You are a SKILL author for an AI agent.
 
-Creativity:
-- Use a creativity level consistent with temperature=${sheet.temperature}.
-  - Low temperature: concise, precise, opinionated.
-  - High temperature: richer examples, analogies, and phrasing (no fluff).
+Return ONLY the contents of a valid SKILL.md file (no commentary, no backticks around the whole file, no extra text before or after).
 
-Tone:
-- Match the intent of sheet.style.tone (e.g. friendly, technical, playful, strict).
+Creativity + tone:
+- Write with a creativity level consistent with temperature={{temperature}} (lower = stricter, higher = more varied).
+- Match the tone: {{tone}}.
 
-Format rules (mandatory):
-- Output a SINGLE Markdown document.
-- Begin with YAML front matter exactly in this form:
-  ---
-  name: <short kebab-case identifier>
-  description: <concise description including when to use + keyword triggers>
-  ---
-- Follow with Markdown body using these exact headings and order:
-  1. Role / Persona (single sentence starting with "You are a ...", plain text, not a heading)
-  2. ## When to use
-  3. ## Teach & Learn
-  4. ## Domains
-  5. ## Recipes
-  6. ## Out of scope / Donts
+Hard format requirements (must follow exactly):
+1) Output a single SKILL.md document.
+2) Begin with YAML front matter:
+---
+name: <kebab-case short name>
+description: <concise description that includes when to use + triggers>
+---
+3) Then Markdown body in this exact order:
+- Role/Persona line (plain text, starts with: "You are a ...")
+- "## When to use" (bullets; include keywords/triggers)
+- "## Teach & Learn"
+- Domain sections ONLY for domains with level > 0 (clear headings, one per domain)
+- "## Recipes" (at least 1 small example overall)
+- "## Out of scope / Don'ts" (what this skill should not do)
 
-Teach & Learn section (required):
-- Explain the skill's core ideas in plain language (avoid jargon).
-- Explain WHY the guidance is structured this way and HOW to apply it.
-- Include a playful analogy tied to the highest-level domain.
-- Include a short "Try it now" exercise (1-3 simple steps).
-- Include an "If you want more depth" list (3-5 follow-up prompts the user can ask).
-- If there are no domains selected, use a general analogy about skill-crafting.
+Teach & Learn requirements:
+- Explain the key ideas in plain language (avoid jargon unless necessary).
+- Explain why the guidance is structured this way and how to apply it.
+- Include a short RPG-flavoured analogy tied to the highest-level domain or overall skill theme.
+- Include a "Try it now" mini-exercise (1–3 steps).
+- Include "If you want more depth" (3–5 follow-up prompts the user can ask).
 
-Domains section:
-- Create one subsection per domain with level > 0.
+Domain section requirements:
+- Only include domains provided in the Character Sheet.
 - Scale depth by level:
-  - Level 1: fundamentals and vocabulary.
-  - Level 3: solid practices, trade-offs, and common pitfalls.
-  - Level 5: advanced techniques, checklists, edge cases, and heuristics.
-- Be concrete and actionable; prefer guidance over theory.
-- If no domains are selected, include a single bullet: "No domains selected."
+  - Level 1: fundamentals + basic patterns
+  - Level 2–3: solid practices, common pitfalls, trade-offs
+  - Level 4–5: advanced techniques, edge cases, heuristics/checklists
+- Be concrete and actionable (prefer do-this / avoid-that over theory).
+- Use short paragraphs and bullet lists for readability.
 
-Recipes section:
-- Include at least ONE small, practical example.
-- Choose examples ONLY from the top 1-2 domains listed in topDomains.
-- If topDomains is empty, provide a general "skill writing" recipe that does not mention a domain.
-- Recipes should be implementation-focused and realistic.
+Recipes requirements:
+- Use scenarios from the top 1–2 domains if provided; otherwise use a general skill-crafting scenario.
+- Keep recipes practical, small, and reproducible.
 
 General constraints:
-- Keep content skimmable and structured.
-- Avoid filler, repetition, or generic advice.
-- Do not reference internal variables, prompt mechanics, or this instruction.
-- Do not invent domains or exceed the provided scope.
+- Stay skimmable (headings, bullets, short sections).
+- No filler, no repetition, no vague advice.
+- Do not invent new domains, levels, tools, APIs, repos, or requirements not present in the Character Sheet.
+- Do not reveal or restate the Character Sheet JSON verbatim.
+
+Self-review (internal, do NOT print):
+- Silently check: YAML valid; all required sections present and in order; every selected domain included once; at least one recipe; tone matches; examples are practical; no extra text outside SKILL.md.
+- If anything is missing or weak, revise internally, then output the final SKILL.md.
+
+Character Sheet (use as source of truth):
+{{character_sheet_json}}
 `;
 
-  return [
-    instruction.trim(),
-    "",
-    "Character Sheet JSON:",
-    JSON.stringify(
-      {
-        ...sheet,
-        domains
-      },
-      null,
-      2
-    )
-  ].join("\n");
+  return instructionTemplate
+    .replaceAll("{{temperature}}", String(sheet.temperature))
+    .replaceAll("{{tone}}", sheet.style.tone)
+    .replaceAll("{{character_sheet_json}}", characterSheetJson)
+    .trim();
 }
