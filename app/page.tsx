@@ -21,6 +21,7 @@ import {
   TemperatureMode
 } from "../lib/types";
 import { validateSkillMarkdown } from "../lib/skillValidation";
+import { normalizeSkillMarkdown } from "../lib/skillNormalization";
 
 const DOMAIN_KEYS = Object.keys(domainFragments) as DomainKey[];
 const DEFAULT_LEVELS: DomainLevelMap = DOMAIN_KEYS.reduce((acc, key) => {
@@ -42,6 +43,7 @@ export default function HomePage() {
   const [temperatureMode, setTemperatureMode] =
     useState<TemperatureMode>("auto");
   const [manualTemperature, setManualTemperature] = useState(0.4);
+  const [includeOutOfScope, setIncludeOutOfScope] = useState(true);
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -113,6 +115,7 @@ export default function HomePage() {
     setModel(stored.model);
     setTemperatureMode(stored.temperatureMode);
     setManualTemperature(stored.manualTemperature);
+    setIncludeOutOfScope(stored.includeOutOfScope ?? true);
     setRememberApiKey(Boolean(stored.rememberApiKey));
     if (stored.rememberApiKey && stored.apiKey) {
       setApiKey(stored.apiKey);
@@ -127,6 +130,7 @@ export default function HomePage() {
       model,
       temperatureMode,
       manualTemperature,
+      includeOutOfScope,
       rememberApiKey,
       apiKey: rememberApiKey ? apiKey : undefined
     });
@@ -137,6 +141,7 @@ export default function HomePage() {
     model,
     temperatureMode,
     manualTemperature,
+    includeOutOfScope,
     rememberApiKey,
     apiKey
   ]);
@@ -261,7 +266,12 @@ export default function HomePage() {
     setIsLoading(true);
     setErrorMessage(undefined);
     try {
-      const sheet = buildCharacterSheet(levels, pointsTotal, activeTemperature);
+      const sheet = buildCharacterSheet(
+        levels,
+        pointsTotal,
+        activeTemperature,
+        includeOutOfScope
+      );
       const response = await fetch("/api/generate-skill", {
         method: "POST",
         headers: {
@@ -295,6 +305,7 @@ export default function HomePage() {
         setOutput("");
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let combined = "";
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
@@ -303,13 +314,15 @@ export default function HomePage() {
           const chunk = decoder.decode(value, { stream: true });
           if (chunk) {
             setOutput((prev) => prev + chunk);
+            combined += chunk;
           }
         }
+        setOutput(normalizeSkillMarkdown(combined));
         return;
       }
 
       const payload = await response.json();
-      setOutput(payload.skillMarkdown ?? "");
+      setOutput(normalizeSkillMarkdown(payload.skillMarkdown ?? ""));
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Network error."
@@ -321,6 +334,7 @@ export default function HomePage() {
     levels,
     pointsTotal,
     activeTemperature,
+    includeOutOfScope,
     provider,
     model,
     apiKey
@@ -413,6 +427,17 @@ export default function HomePage() {
               >
                 {isLoading ? "Forging your skill..." : "Generate SKILL.md"}
               </button>
+              <label className="flex items-start gap-3 text-xs text-ink-600">
+                <input
+                  checked={includeOutOfScope}
+                  className="mt-0.5 accent-brass-500"
+                  onChange={(event) =>
+                    setIncludeOutOfScope(event.target.checked)
+                  }
+                  type="checkbox"
+                />
+                Include the “Out of scope / Don'ts” section.
+              </label>
             </div>
           </div>
         </section>

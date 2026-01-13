@@ -15,6 +15,7 @@ export interface StoredSettings {
   temperatureMode: TemperatureMode;
   manualTemperature: number;
   rememberApiKey: boolean;
+  includeOutOfScope: boolean;
   apiKey?: string;
 }
 
@@ -38,6 +39,7 @@ const settingsSchema = z
     temperatureMode: z.enum(["auto", "manual"]),
     manualTemperature: z.coerce.number().min(0).max(1),
     rememberApiKey: z.coerce.boolean(),
+    includeOutOfScope: z.coerce.boolean().optional(),
     apiKey: z.string().optional()
   })
   .strict();
@@ -52,7 +54,13 @@ export function loadSettings(): StoredSettings | null {
   }
   try {
     const parsed = settingsSchema.safeParse(JSON.parse(raw));
-    return parsed.success ? parsed.data : null;
+    if (!parsed.success) {
+      return null;
+    }
+    return {
+      ...parsed.data,
+      includeOutOfScope: parsed.data.includeOutOfScope ?? true
+    };
   } catch {
     return null;
   }

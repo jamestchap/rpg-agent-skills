@@ -21,6 +21,7 @@ export interface CharacterSheet {
   levels: DomainLevelMap;
   topDomains: DomainKey[];
   temperature: number;
+  includeOutOfScope: boolean;
   style: {
     tone: string;
     format: "markdown";

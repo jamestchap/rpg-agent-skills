@@ -21,7 +21,8 @@ export function getAutoTemperature(levels: DomainLevelMap): number {
 export function buildCharacterSheet(
   levels: DomainLevelMap,
   pointsTotal: number,
-  temperature: number
+  temperature: number,
+  includeOutOfScope: boolean
 ): CharacterSheet {
   const className = getClassName(levels);
   return {
@@ -30,6 +31,7 @@ export function buildCharacterSheet(
     levels,
     topDomains: getTopDomains(levels),
     temperature,
+    includeOutOfScope,
     style: {
       tone: "helpful, direct, non-technical friendly",
       format: "markdown"

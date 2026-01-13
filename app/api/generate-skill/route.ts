@@ -10,7 +10,8 @@ const domainKeys = [
   "databases",
   "accessibility",
   "performance",
-  "documentation"
+  "documentation",
+  "planning"
 ] as const;
 
 const domainKeySchema = z.enum(domainKeys);
@@ -27,10 +28,12 @@ const characterSheetSchema = z.object({
     databases: domainLevelSchema,
     accessibility: domainLevelSchema,
     performance: domainLevelSchema,
-    documentation: domainLevelSchema
+    documentation: domainLevelSchema,
+    planning: domainLevelSchema
   }),
   topDomains: z.array(domainKeySchema),
   temperature: z.number().min(0).max(1),
+  includeOutOfScope: z.boolean(),
   style: z.object({
     tone: z.string().min(1),
     format: z.literal("markdown")
