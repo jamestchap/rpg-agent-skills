@@ -8,7 +8,7 @@ interface ModelSettingsPanelProps {
   model: string;
   apiKey: string;
   rememberApiKey: boolean;
-  openRouterModels: Array<{ id: string; name: string }>;
+  openRouterModels: Array<{ id: string; name?: string }>;
   isModelsLoading: boolean;
   modelsError?: string;
   temperatureMode: TemperatureMode;
@@ -51,7 +51,7 @@ export function ModelSettingsPanel({
         }
         return (
           modelItem.id.toLowerCase().includes(normalizedModel) ||
-          modelItem.name.toLowerCase().includes(normalizedModel)
+          (modelItem.name ?? "").toLowerCase().includes(normalizedModel)
         );
       })
     : [];

@@ -33,6 +33,46 @@ const MAX_LEVEL = 5;
 const DEFAULT_OLLAMA_MODEL = "gemma2:9b";
 const DEFAULT_OPENROUTER_MODEL = "anthropic/claude-3.5-sonnet";
 
+type ErrorPayload = {
+  error?: string;
+};
+
+type OpenRouterModel = {
+  id: string;
+  name?: string;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const isErrorPayload = (value: unknown): value is ErrorPayload =>
+  isRecord(value) &&
+  (value.error === undefined || typeof value.error === "string");
+
+const isOpenRouterModel = (value: unknown): value is OpenRouterModel =>
+  isRecord(value) &&
+  typeof value.id === "string" &&
+  (value.name === undefined || typeof value.name === "string");
+
+const getErrorMessage = (value: unknown): string | undefined =>
+  isErrorPayload(value) ? value.error : undefined;
+
+const getOpenRouterModels = (value: unknown): OpenRouterModel[] => {
+  if (!isRecord(value) || !Array.isArray(value.models)) {
+    return [];
+  }
+  return value.models.filter(isOpenRouterModel);
+};
+
+const getSkillMarkdown = (value: unknown): string | undefined => {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+  return typeof value.skillMarkdown === "string"
+    ? value.skillMarkdown
+    : undefined;
+};
+
 export default function HomePage() {
   const [levels, setLevels] = useState<DomainLevelMap>(DEFAULT_LEVELS);
   const [pointsTotal, setPointsTotal] = useState(10);
@@ -48,7 +88,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [openRouterModels, setOpenRouterModels] = useState<
-    Array<{ id: string; name: string }>
+    Array<{ id: string; name?: string }>
   >([]);
   const [modelsError, setModelsError] = useState<string | undefined>();
   const [isModelsLoading, setIsModelsLoading] = useState(false);
@@ -192,18 +232,17 @@ export default function HomePage() {
     })
       .then(async (response) => {
         if (!response.ok) {
-          const payload = await response.json().catch(() => ({}));
-          throw new Error(payload.error ?? "Failed to load models.");
+          const payload = (await response.json().catch(() => null)) as unknown;
+          const message = getErrorMessage(payload);
+          throw new Error(message ?? "Failed to load models.");
         }
-        return response.json();
+        return (await response.json()) as unknown;
       })
-      .then((payload) => {
+      .then((payload: unknown) => {
         if (isCancelled) {
           return;
         }
-        const models = Array.isArray(payload.models)
-          ? payload.models.filter((modelItem) => modelItem.id)
-          : [];
+        const models = getOpenRouterModels(payload);
         models.sort((a, b) => a.id.localeCompare(b.id));
         setOpenRouterModels(models);
       })
@@ -291,8 +330,8 @@ export default function HomePage() {
       if (!response.ok) {
         let message = "Something went wrong.";
         try {
-          const payload = await response.json();
-          message = payload.error ?? message;
+          const payload = (await response.json()) as unknown;
+          message = getErrorMessage(payload) ?? message;
         } catch {
           // Ignore parse failures and fall back to the default message.
         }
@@ -321,8 +360,9 @@ export default function HomePage() {
         return;
       }
 
-      const payload = await response.json();
-      setOutput(normalizeSkillMarkdown(payload.skillMarkdown ?? ""));
+      const payload = (await response.json()) as unknown;
+      const skillMarkdown = getSkillMarkdown(payload);
+      setOutput(normalizeSkillMarkdown(skillMarkdown ?? ""));
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Network error."
@@ -436,7 +476,7 @@ export default function HomePage() {
                   }
                   type="checkbox"
                 />
-                Include the “Out of scope / Don'ts” section.
+                Include the “Out of scope / Don&apos;ts” section.
               </label>
             </div>
           </div>
