@@ -6,7 +6,8 @@ export type DomainKey =
   | "databases"
   | "accessibility"
   | "performance"
-  | "documentation";
+  | "documentation"
+  | "planning";
 
 export type DomainLevelMap = Record<DomainKey, number>;
 
