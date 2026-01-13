@@ -128,5 +128,30 @@ export const domainFragments: Record<DomainKey, DomainFragment> = {
       "Break down a vague feature request into clear implementation steps",
       "Craft clarifying questions for an unclear project prompt"
     ]
+  },
+  designer: {
+    label: "Design",
+    icon: "🎨",
+    keywords: [
+      "UX",
+      "UI",
+      "flows",
+      "prototypes",
+      "visual hierarchy",
+      "systems",
+      "Material UI",
+      "Magic UI"
+    ],
+    rubric: {
+      1: "Understands basic layout principles and can assemble simple interface mockups.",
+      2: "Designs clear user flows, applies consistent spacing, and selects readable typography.",
+      3: "Balances usability with visual polish, pairing library components with coherent patterns.",
+      4: "Builds scalable design systems and aligns Material UI or Magic UI usage with brand direction.",
+      5: "Leads end-to-end design strategy, combining research insights with refined execution."
+    },
+    recipeIdeas: [
+      "Design a multi-step onboarding flow using Material UI or Magic UI components",
+      "Create a lightweight component style guide aligned to a UI library"
+    ]
   }
 };
