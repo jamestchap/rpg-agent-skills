@@ -10,7 +10,8 @@ const classTitles: Record<DomainKey, string> = {
   accessibility: "Accessibility Guardian",
   performance: "Performance Sprinter",
   documentation: "Documentation Bard",
-  designer: "Design Crafter"
+  designer: "Design Crafter",
+  planning: "Planning Strategist"
 };
 
 const classFlavour: Record<string, string> = {
@@ -33,7 +34,9 @@ const classFlavour: Record<string, string> = {
   "Documentation Bard":
     "Tells the story so others can follow the path easily.",
   "Design Crafter":
-    "Shapes delightful experiences with thoughtful visuals and user flows."
+    "Shapes delightful experiences with thoughtful visuals and user flows.",
+  "Planning Strategist":
+    "Charts the course with careful foresight, keeping quests on track."
 };
 
 export function getTopDomains(levels: DomainLevelMap): DomainKey[] {
