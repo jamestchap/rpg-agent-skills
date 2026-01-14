@@ -1,6 +1,8 @@
 "use client";
 
 import { DomainKey } from "../../lib/types";
+import { Badge } from "../ui/badge";
+import { Card } from "../ui/card";
 
 interface CharacterSummaryProps {
   className: string;
@@ -14,7 +16,7 @@ export function CharacterSummary({
   topDomains
 }: CharacterSummaryProps) {
   return (
-    <div className="panel space-y-3">
+    <Card className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-ink-500">Character summary</p>
@@ -23,10 +25,10 @@ export function CharacterSummary({
           </h2>
         </div>
         {topDomains.length > 0 && (
-          <span className="badge">{topDomains.length} top domains</span>
+          <Badge>{topDomains.length} top domains</Badge>
         )}
       </div>
       <p className="text-sm text-ink-600">{flavourText}</p>
-    </div>
+    </Card>
   );
 }

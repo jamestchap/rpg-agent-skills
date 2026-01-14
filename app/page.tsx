@@ -6,6 +6,11 @@ import { CharacterSummary } from "../components/rpg/CharacterSummary";
 import { PointsRemaining } from "../components/rpg/PointsRemaining";
 import { ModelSettingsPanel } from "../components/rpg/ModelSettingsPanel";
 import { OutputPanel } from "../components/rpg/OutputPanel";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import { Card, CardDescription, CardTitle } from "../components/ui/card";
+import { Checkbox } from "../components/ui/checkbox";
+import { Container, Section, Stack } from "../components/ui/layout";
 import { domainFragments } from "../lib/domainFragments";
 import {
   buildCharacterSheet,
@@ -401,116 +406,120 @@ export default function HomePage() {
   }, [output]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-10">
+    <main className="relative min-h-screen overflow-hidden">
       <div
         className="page-sheen pointer-events-none absolute inset-0"
         aria-hidden="true"
       />
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-8">
-        <header
-          className="space-y-3 animate-fade-up"
-          style={{ animationDelay: "0.05s" }}
-        >
-          <p className="badge">RPG Skill Forge</p>
-          <h1 className="text-3xl font-semibold text-ink-900 md:text-4xl font-display">
-            Build your agent character sheet
-          </h1>
-          <p className="text-base text-ink-600 md:text-lg">
-            Allocate points across domains, tune your model, and forge a
-            SKILL.md profile with an RPG twist.
-          </p>
-        </header>
-
-        <section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-          <div
-            className="space-y-6 animate-fade-up"
-            style={{ animationDelay: "0.12s" }}
+      <Container className="relative py-10">
+        <Stack className="gap-8">
+          <header
+            className="animate-fade-up"
+            style={{ animationDelay: "0.05s" }}
           >
-            <PointsRemaining
-              pointsRemaining={pointsRemaining}
-              pointsTotal={pointsTotal}
-              onChangeTotal={handlePointsTotalChange}
-            />
-            <div className="grid gap-4 md:grid-cols-2">
-              {DOMAIN_KEYS.map((domain) => (
-                <DomainCard
-                  key={domain}
-                  domain={domain}
-                  level={levels[domain]}
-                  maxLevel={MAX_LEVEL}
-                  onChange={(value) => handleLevelChange(domain, value)}
-                  disableIncrease={pointsRemaining <= 0}
-                />
-              ))}
-            </div>
-          </div>
-          <div
-            className="space-y-6 animate-fade-up"
-            style={{ animationDelay: "0.18s" }}
-          >
-            <CharacterSummary
-              className={className}
-              flavourText={flavourText}
-              topDomains={topDomains}
-            />
-            <div className="panel space-y-3">
-              <h2 className="panel-title">Generate SKILL.md</h2>
-              <p className="text-sm text-ink-600">
-                Ready to forge? This uses your character sheet and temperature
-                settings.
+            <Stack className="gap-3">
+              <Badge>RPG Skill Forge</Badge>
+              <h1 className="text-3xl font-semibold text-ink-900 md:text-4xl font-display">
+                Build your agent character sheet
+              </h1>
+              <p className="text-base text-ink-600 md:text-lg">
+                Allocate points across domains, tune your model, and forge a
+                SKILL.md profile with an RPG twist.
               </p>
-              <button
-                className="btn-primary w-full py-3"
-                disabled={isLoading}
-                onClick={handleGenerate}
-                type="button"
-              >
-                {isLoading ? "Forging your skill..." : "Generate SKILL.md"}
-              </button>
-              <label className="flex items-start gap-3 text-xs text-ink-600">
-                <input
-                  checked={includeOutOfScope}
-                  className="mt-0.5 accent-brass-500"
-                  onChange={(event) =>
-                    setIncludeOutOfScope(event.target.checked)
-                  }
-                  type="checkbox"
-                />
-                Include the “Out of scope / Don&apos;ts” section.
-              </label>
-            </div>
-          </div>
-        </section>
+            </Stack>
+          </header>
 
-        <ModelSettingsPanel
-          provider={provider}
-          model={model}
-          apiKey={apiKey}
-          rememberApiKey={rememberApiKey}
-          openRouterModels={openRouterModels}
-          isModelsLoading={isModelsLoading}
-          modelsError={modelsError}
-          temperatureMode={temperatureMode}
-          manualTemperature={manualTemperature}
-          autoTemperature={autoTemperature}
-          onProviderChange={setProvider}
-          onModelChange={setModel}
-          onApiKeyChange={setApiKey}
-          onRememberChange={setRememberApiKey}
-          onTemperatureModeChange={setTemperatureMode}
-          onManualTemperatureChange={setManualTemperature}
-        />
+          <Section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+            <Stack
+              className="animate-fade-up"
+              style={{ animationDelay: "0.12s" }}
+            >
+              <PointsRemaining
+                pointsRemaining={pointsRemaining}
+                pointsTotal={pointsTotal}
+                onChangeTotal={handlePointsTotalChange}
+              />
+              <Section className="grid gap-4 md:grid-cols-2">
+                {DOMAIN_KEYS.map((domain) => (
+                  <DomainCard
+                    key={domain}
+                    domain={domain}
+                    level={levels[domain]}
+                    maxLevel={MAX_LEVEL}
+                    onChange={(value) => handleLevelChange(domain, value)}
+                    disableIncrease={pointsRemaining <= 0}
+                  />
+                ))}
+              </Section>
+            </Stack>
+            <Stack
+              className="animate-fade-up"
+              style={{ animationDelay: "0.18s" }}
+            >
+              <CharacterSummary
+                className={className}
+                flavourText={flavourText}
+                topDomains={topDomains}
+              />
+              <Card className="space-y-3">
+                <CardTitle>Generate SKILL.md</CardTitle>
+                <CardDescription>
+                  Ready to forge? This uses your character sheet and
+                  temperature settings.
+                </CardDescription>
+                <Button
+                  className="w-full"
+                  disabled={isLoading}
+                  onClick={handleGenerate}
+                  size="lg"
+                  variant="primary"
+                >
+                  {isLoading ? "Forging your skill..." : "Generate SKILL.md"}
+                </Button>
+                <label className="flex items-start gap-3 text-xs text-ink-600">
+                  <Checkbox
+                    checked={includeOutOfScope}
+                    className="mt-0.5"
+                    onChange={(event) =>
+                      setIncludeOutOfScope(event.target.checked)
+                    }
+                  />
+                  Include the “Out of scope / Don&apos;ts” section.
+                </label>
+              </Card>
+            </Stack>
+          </Section>
 
-        <OutputPanel
-          output={output}
-          validation={validation}
-          onCopy={handleCopy}
-          onDownload={handleDownload}
-          onRegenerate={handleGenerate}
-          isLoading={isLoading}
-          errorMessage={errorMessage}
-        />
-      </div>
+          <ModelSettingsPanel
+            provider={provider}
+            model={model}
+            apiKey={apiKey}
+            rememberApiKey={rememberApiKey}
+            openRouterModels={openRouterModels}
+            isModelsLoading={isModelsLoading}
+            modelsError={modelsError}
+            temperatureMode={temperatureMode}
+            manualTemperature={manualTemperature}
+            autoTemperature={autoTemperature}
+            onProviderChange={setProvider}
+            onModelChange={setModel}
+            onApiKeyChange={setApiKey}
+            onRememberChange={setRememberApiKey}
+            onTemperatureModeChange={setTemperatureMode}
+            onManualTemperatureChange={setManualTemperature}
+          />
+
+          <OutputPanel
+            output={output}
+            validation={validation}
+            onCopy={handleCopy}
+            onDownload={handleDownload}
+            onRegenerate={handleGenerate}
+            isLoading={isLoading}
+            errorMessage={errorMessage}
+          />
+        </Stack>
+      </Container>
     </main>
   );
 }
