@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { ProviderName, TemperatureMode } from "../../lib/types";
+import { Button } from "../ui/button";
+import { Card, CardTitle } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
+import { Select } from "../ui/select";
+import { Slider } from "../ui/slider";
 
 interface ModelSettingsPanelProps {
   provider: ProviderName;
@@ -76,13 +82,13 @@ export function ModelSettingsPanel({
   };
 
   return (
-    <div className="panel space-y-4">
-      <h2 className="panel-title">Model settings</h2>
+    <Card className="space-y-4">
+      <CardTitle>Model settings</CardTitle>
       <div className="grid gap-4 md:grid-cols-2">
         <label className="text-sm text-ink-600">
           Provider
-          <select
-            className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
+          <Select
+            className="mt-1"
             onChange={(event) =>
               onProviderChange(event.target.value as ProviderName)
             }
@@ -90,13 +96,13 @@ export function ModelSettingsPanel({
           >
             <option value="ollama">Ollama</option>
             <option value="openrouter">OpenRouter</option>
-          </select>
+          </Select>
         </label>
         <label className="text-sm text-ink-600">
           Model
           <div className="relative">
-            <input
-              className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
+            <Input
+              className="mt-1"
               onChange={(event) => {
                 onModelChange(event.target.value);
                 setIsModelFocused(true);
@@ -117,14 +123,16 @@ export function ModelSettingsPanel({
             {showModelsList && isModelFocused && filteredModels.length > 0 && (
               <div className="absolute left-0 right-0 top-full z-10 mt-2 max-h-40 overflow-auto rounded-lg border border-ink-200 bg-white shadow-lg">
                 {filteredModels.map((modelItem) => (
-                  <button
-                    className="block w-full px-3 py-2 text-left text-xs text-ink-800 hover:bg-parchment-100"
+                  <Button
+                    className="h-auto w-full justify-start rounded-md px-3 py-2 text-left text-xs font-normal text-ink-800 hover:bg-parchment-100"
                     key={modelItem.id}
                     onMouseDown={(event) => {
                       event.preventDefault();
                       handleModelSelect(modelItem.id);
                     }}
+                    size="sm"
                     type="button"
+                    variant="ghost"
                   >
                     <span className="text-ink-800">{modelItem.id}</span>
                     {modelItem.name && (
@@ -133,7 +141,7 @@ export function ModelSettingsPanel({
                         — {modelItem.name}
                       </span>
                     )}
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}
@@ -149,8 +157,8 @@ export function ModelSettingsPanel({
           <div className="space-y-2">
             <label className="text-sm text-ink-600">
               OpenRouter API key
-              <input
-                className="mt-1 w-full rounded-lg border border-ink-200 bg-white/80 px-3 py-2 text-ink-900"
+              <Input
+                className="mt-1"
                 onChange={(event) => onApiKeyChange(event.target.value)}
                 placeholder="sk-or-..."
                 type="password"
@@ -158,11 +166,9 @@ export function ModelSettingsPanel({
               />
             </label>
             <label className="flex items-center gap-2 text-xs text-ink-500">
-              <input
+              <Checkbox
                 checked={rememberApiKey}
-                className="accent-brass-500"
                 onChange={(event) => onRememberChange(event.target.checked)}
-                type="checkbox"
               />
               Remember key on this device
             </label>
@@ -173,28 +179,32 @@ export function ModelSettingsPanel({
         <div className="space-y-2">
           <p className="text-sm text-ink-600">Temperature mode</p>
           <div className="flex gap-2">
-            <button
-              className={`btn-chip ${
+            <Button
+              className={
                 temperatureMode === "auto"
                   ? "border-brass-600 bg-brass-100 text-brass-800"
                   : "border-ink-200 text-ink-600 hover:border-ink-400"
-              }`}
+              }
               onClick={() => onTemperatureModeChange("auto")}
+              size="sm"
               type="button"
+              variant="chip"
             >
               Auto
-            </button>
-            <button
-              className={`btn-chip ${
+            </Button>
+            <Button
+              className={
                 temperatureMode === "manual"
                   ? "border-brass-600 bg-brass-100 text-brass-800"
                   : "border-ink-200 text-ink-600 hover:border-ink-400"
-              }`}
+              }
               onClick={() => onTemperatureModeChange("manual")}
+              size="sm"
               type="button"
+              variant="chip"
             >
               Manual
-            </button>
+            </Button>
           </div>
           <p className="text-xs text-ink-500">
             Auto mode updates based on your build: {autoTemperature}.
@@ -202,8 +212,8 @@ export function ModelSettingsPanel({
         </div>
         <label className="text-sm text-ink-600">
           Manual temperature
-          <input
-            className="mt-3 h-3 w-full cursor-pointer accent-brass-500"
+          <Slider
+            className="mt-3"
             disabled={temperatureMode !== "manual"}
             max={1}
             min={0}
@@ -211,7 +221,6 @@ export function ModelSettingsPanel({
               onManualTemperatureChange(Number(event.target.value))
             }
             step={0.01}
-            type="range"
             value={manualTemperature}
           />
           <p className="mt-2 text-xs text-ink-500">
@@ -219,6 +228,6 @@ export function ModelSettingsPanel({
           </p>
         </label>
       </div>
-    </div>
+    </Card>
   );
 }

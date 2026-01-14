@@ -1,6 +1,8 @@
 "use client";
 
 import { ValidationResult } from "../../lib/skillValidation";
+import { Button } from "../ui/button";
+import { Card, CardTitle } from "../ui/card";
 
 interface OutputPanelProps {
   output: string;
@@ -22,35 +24,27 @@ export function OutputPanel({
   errorMessage
 }: OutputPanelProps) {
   return (
-    <div className="panel space-y-4">
+    <Card className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="panel-title">SKILL.md output</h2>
+        <CardTitle>SKILL.md output</CardTitle>
         <div className="flex flex-wrap gap-2">
-          <button
-            className="btn-secondary px-3 py-1"
-            onClick={onCopy}
-            type="button"
-          >
+          <Button onClick={onCopy} size="sm" variant="secondary">
             Copy
-          </button>
-          <button
-            className="btn-secondary px-3 py-1"
-            onClick={onDownload}
-            type="button"
-          >
+          </Button>
+          <Button onClick={onDownload} size="sm" variant="secondary">
             Download SKILL.md
-          </button>
-          <button
-            className="btn-primary px-3 py-1"
+          </Button>
+          <Button
             disabled={isLoading}
             onClick={onRegenerate}
-            type="button"
+            size="sm"
+            variant="primary"
           >
             {isLoading ? "Forging..." : "Regenerate"}
-          </button>
+          </Button>
         </div>
       </div>
-      <div className="rounded-xl border border-ink-200 bg-parchment-50 p-4 overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-ink-200 bg-parchment-50 p-4">
         <pre className="max-h-[360px] overflow-auto whitespace-pre-wrap break-words text-sm text-ink-800">
           {output || "Generated SKILL.md will appear here."}
         </pre>
@@ -68,6 +62,6 @@ export function OutputPanel({
           <span className="text-rose-700">{errorMessage}</span>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,5 +1,8 @@
 "use client";
 
+import { Card } from "../ui/card";
+import { Input } from "../ui/input";
+
 interface PointsRemainingProps {
   pointsRemaining: number;
   pointsTotal: number;
@@ -12,7 +15,7 @@ export function PointsRemaining({
   onChangeTotal
 }: PointsRemainingProps) {
   return (
-    <div className="panel flex items-center justify-between gap-6">
+    <Card className="flex items-center justify-between gap-6">
       <div>
         <p className="text-sm text-ink-500">Points remaining</p>
         <p className="text-2xl font-semibold text-ink-900">
@@ -21,8 +24,8 @@ export function PointsRemaining({
       </div>
       <label className="text-sm text-ink-600">
         Total points
-        <input
-          className="ml-3 w-20 rounded-lg border-2 border-ink-200 bg-white/90 px-2 py-1 text-ink-900"
+        <Input
+          className="ml-3 w-20"
           min={0}
           max={30}
           onChange={(event) => onChangeTotal(Number(event.target.value))}
@@ -30,6 +33,6 @@ export function PointsRemaining({
           value={pointsTotal}
         />
       </label>
-    </div>
+    </Card>
   );
 }
