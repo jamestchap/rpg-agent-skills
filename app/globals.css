@@ -4,14 +4,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --page-accent: 181 125 34;
-  --page-accent-2: 75 112 92;
-  --page-paper-1: 233 224 208;
-  --page-paper-2: 210 198 180;
-  --page-paper-3: 184 169 150;
-  --page-shadow: 53 46 42;
+@layer base {
+  :root {
+    color-scheme: light;
+    --page-accent: 181 125 34;
+    --page-accent-2: 75 112 92;
+    --page-paper-1: 233 224 208;
+    --page-paper-2: 210 198 180;
+    --page-paper-3: 184 169 150;
+    --page-shadow: 53 46 42;
+    --background: 32 23% 87%;
+    --foreground: 33 17% 10%;
+    --card: 32 23% 87%;
+    --card-foreground: 33 17% 10%;
+    --popover: 32 23% 87%;
+    --popover-foreground: 33 17% 10%;
+    --primary: 37 68% 42%;
+    --primary-foreground: 35 60% 96%;
+    --secondary: 35 52% 91%;
+    --secondary-foreground: 33 17% 10%;
+    --muted: 32 23% 87%;
+    --muted-foreground: 21 12% 42%;
+    --accent: 43 100% 85%;
+    --accent-foreground: 33 17% 10%;
+    --destructive: 21 74% 53%;
+    --destructive-foreground: 35 60% 96%;
+    --border: 29 16% 64%;
+    --input: 29 16% 64%;
+    --ring: 37 68% 42%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 33 17% 10%;
+    --foreground: 35 60% 96%;
+    --card: 33 17% 10%;
+    --card-foreground: 35 60% 96%;
+    --popover: 33 17% 10%;
+    --popover-foreground: 35 60% 96%;
+    --primary: 43 100% 85%;
+    --primary-foreground: 33 17% 10%;
+    --secondary: 21 12% 42%;
+    --secondary-foreground: 35 60% 96%;
+    --muted: 21 12% 42%;
+    --muted-foreground: 29 16% 64%;
+    --accent: 37 68% 42%;
+    --accent-foreground: 35 60% 96%;
+    --destructive: 21 74% 53%;
+    --destructive-foreground: 35 60% 96%;
+    --border: 21 12% 42%;
+    --input: 21 12% 42%;
+    --ring: 43 100% 85%;
+  }
+
+  * {
+    @apply border-border;
+  }
 }
 
 body {
@@ -61,6 +110,44 @@ body {
   background-size: auto, auto, auto, auto;
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes meteor {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
+  }
+}
+
 @keyframes fade-up {
   0% {
     opacity: 0;
@@ -74,4 +161,34 @@ body {
 
 .animate-fade-up {
   animation: fade-up 0.6s ease-out both;
+}
+
+@layer utilities {
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
+  }
+
+  .animate-marquee-vertical {
+    animation: marquee-vertical 25s linear infinite;
+  }
+
+  .animate-meteor {
+    animation: meteor 5s linear infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
 }
