@@ -7,55 +7,55 @@
 @layer base {
   :root {
     color-scheme: light;
-    --page-accent: 181 125 34;
-    --page-accent-2: 75 112 92;
-    --page-paper-1: 233 224 208;
-    --page-paper-2: 210 198 180;
-    --page-paper-3: 184 169 150;
-    --page-shadow: 53 46 42;
-    --background: 32 23% 87%;
-    --foreground: 33 17% 10%;
-    --card: 32 23% 87%;
-    --card-foreground: 33 17% 10%;
-    --popover: 32 23% 87%;
-    --popover-foreground: 33 17% 10%;
-    --primary: 37 68% 42%;
-    --primary-foreground: 35 60% 96%;
-    --secondary: 35 52% 91%;
-    --secondary-foreground: 33 17% 10%;
-    --muted: 32 23% 87%;
-    --muted-foreground: 21 12% 42%;
-    --accent: 43 100% 85%;
-    --accent-foreground: 33 17% 10%;
-    --destructive: 21 74% 53%;
-    --destructive-foreground: 35 60% 96%;
-    --border: 29 16% 64%;
-    --input: 29 16% 64%;
-    --ring: 37 68% 42%;
+    --page-accent: 235 94 85;
+    --page-accent-2: 198 216 211;
+    --page-paper-1: 253 240 213;
+    --page-paper-2: 246 229 196;
+    --page-paper-3: 228 196 138;
+    --page-shadow: 58 51 53;
+    --background: 39 85% 93%;
+    --foreground: 330 8% 20%;
+    --card: 39 85% 93%;
+    --card-foreground: 330 8% 20%;
+    --popover: 39 85% 93%;
+    --popover-foreground: 330 8% 20%;
+    --primary: 4 79% 63%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 165 16% 81%;
+    --secondary-foreground: 330 8% 20%;
+    --muted: 165 16% 86%;
+    --muted-foreground: 330 6% 35%;
+    --accent: 342 76% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 342 76% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 165 16% 75%;
+    --input: 165 16% 75%;
+    --ring: 4 79% 63%;
     --radius: 0.75rem;
   }
 
   .dark {
     color-scheme: dark;
-    --background: 33 17% 10%;
-    --foreground: 35 60% 96%;
-    --card: 33 17% 10%;
-    --card-foreground: 35 60% 96%;
-    --popover: 33 17% 10%;
-    --popover-foreground: 35 60% 96%;
-    --primary: 43 100% 85%;
-    --primary-foreground: 33 17% 10%;
-    --secondary: 21 12% 42%;
-    --secondary-foreground: 35 60% 96%;
-    --muted: 21 12% 42%;
-    --muted-foreground: 29 16% 64%;
-    --accent: 37 68% 42%;
-    --accent-foreground: 35 60% 96%;
-    --destructive: 21 74% 53%;
-    --destructive-foreground: 35 60% 96%;
-    --border: 21 12% 42%;
-    --input: 21 12% 42%;
-    --ring: 43 100% 85%;
+    --background: 330 8% 14%;
+    --foreground: 39 85% 93%;
+    --card: 330 8% 16%;
+    --card-foreground: 39 85% 93%;
+    --popover: 330 8% 16%;
+    --popover-foreground: 39 85% 93%;
+    --primary: 4 79% 63%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 165 16% 35%;
+    --secondary-foreground: 39 85% 93%;
+    --muted: 165 16% 35%;
+    --muted-foreground: 165 16% 70%;
+    --accent: 342 76% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 342 76% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 330 8% 26%;
+    --input: 330 8% 26%;
+    --ring: 4 79% 63%;
   }
 
   * {
@@ -64,7 +64,7 @@
 }
 
 body {
-  @apply bg-smoke-100 text-ink-900 font-body;
+  @apply bg-smoke-300 text-ink-900 font-body;
 }
 
 .panel {
@@ -98,54 +98,16 @@ body {
 
 .page-sheen {
   background:
-    radial-gradient(circle at 20% 20%, rgba(var(--page-accent), 0.08), transparent 50%),
-    radial-gradient(circle at 80% 0%, rgba(var(--page-accent-2), 0.08), transparent 50%),
-    radial-gradient(circle at 50% 120%, rgba(26, 38, 34, 0.2), transparent 60%),
+    radial-gradient(circle at 15% 10%, rgba(var(--page-accent), 0.05), transparent 55%),
+    radial-gradient(circle at 85% 5%, rgba(var(--page-accent-2), 0.06), transparent 55%),
+    radial-gradient(circle at 50% 120%, rgba(var(--page-shadow), 0.28), transparent 60%),
     linear-gradient(
       180deg,
-      rgba(var(--page-paper-1), 1) 0%,
-      rgba(var(--page-paper-2), 1) 55%,
-      rgba(var(--page-paper-3), 1) 100%
+      rgba(var(--page-paper-1), 0.88) 0%,
+      rgba(var(--page-paper-2), 0.8) 60%,
+      rgba(var(--page-paper-3), 0.72) 100%
     );
   background-size: auto, auto, auto, auto;
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes marquee-vertical {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-}
-
-@keyframes meteor {
-  0% {
-    transform: rotate(215deg) translateX(0);
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(215deg) translateX(-500px);
-    opacity: 0;
-  }
 }
 
 @keyframes fade-up {
@@ -159,25 +121,37 @@ body {
   }
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes rippling {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
 .animate-fade-up {
   animation: fade-up 0.6s ease-out both;
 }
 
 @layer utilities {
-  .animate-shimmer {
-    animation: shimmer 2s linear infinite;
+  .animate-gradient {
+    animation: gradient 6s linear infinite;
   }
 
-  .animate-marquee {
-    animation: marquee 25s linear infinite;
-  }
-
-  .animate-marquee-vertical {
-    animation: marquee-vertical 25s linear infinite;
-  }
-
-  .animate-meteor {
-    animation: meteor 5s linear infinite;
+  .animate-rippling {
+    animation: rippling 0.6s ease-out forwards;
   }
 
   .animation-delay-2000 {

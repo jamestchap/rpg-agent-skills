@@ -418,13 +418,15 @@ export default function HomePage() {
             style={{ animationDelay: "0.05s" }}
           >
             <Stack className="gap-3">
-              <Badge>RPG Skill Forge</Badge>
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-ink-500">
+                RPG Skill Forge
+              </p>
               <h1 className="text-3xl font-semibold text-ink-900 md:text-4xl font-display">
                 Build your agent character sheet
               </h1>
               <p className="text-base text-ink-600 md:text-lg">
                 Allocate points across domains, tune your model, and forge a
-                SKILL.md profile with an RPG twist.
+                SKILL.md.
               </p>
             </Stack>
           </header>
@@ -486,6 +488,10 @@ export default function HomePage() {
                   />
                   Include the “Out of scope / Don&apos;ts” section.
                 </label>
+                <p className="text-xs text-ink-500">
+                  This adds clear boundaries to the SKILL.md so users know what
+                  the agent will not do and why.
+                </p>
               </Card>
             </Stack>
           </Section>

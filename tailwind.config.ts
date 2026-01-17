@@ -44,71 +44,71 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))"
         },
         ink: {
-          50: "#f9f6f0",
-          100: "#efe7dc",
-          200: "#ded4c5",
-          300: "#c4b6a4",
-          400: "#a18f7d",
-          500: "#7e6f60",
-          600: "#5f5247",
-          700: "#473e35",
-          800: "#332c26",
-          900: "#1f1b16"
+          50: "#f4f0f1",
+          100: "#e6dee0",
+          200: "#cbbfc4",
+          300: "#b09fa6",
+          400: "#95828a",
+          500: "#7b666f",
+          600: "#655257",
+          700: "#514145",
+          800: "#3f3235",
+          900: "#2f2427"
         },
         parchment: {
-          50: "#fbf6ef",
-          100: "#f4eadc",
-          200: "#eadbc9",
-          300: "#dbc6aa",
-          400: "#c6ab86"
+          50: "#fdf7e6",
+          100: "#fdf0d5",
+          200: "#f7e6c4",
+          300: "#f0d8a9",
+          400: "#e4c48a"
         },
         pine: {
-          50: "#edf4ef",
-          100: "#d5e5da",
-          200: "#b1cfbf",
-          300: "#86b19a",
-          400: "#5f8e74",
-          500: "#4b705c",
-          600: "#3d5a4b",
-          700: "#31483d",
-          800: "#25362e",
-          900: "#1a2622"
+          50: "#eef5f2",
+          100: "#dbe7e2",
+          200: "#c6d8d3",
+          300: "#b2cbc5",
+          400: "#9fbdb7",
+          500: "#8cafaa",
+          600: "#769892",
+          700: "#5f7d77",
+          800: "#495e59",
+          900: "#364543"
         },
         brass: {
-          50: "#fff6db",
-          100: "#ffe9b3",
-          200: "#ffd47a",
-          300: "#f0b74a",
-          400: "#d39b2f",
-          500: "#b57d22",
-          600: "#8f5f1a",
-          700: "#6f4915",
-          800: "#543711",
-          900: "#3a240b"
+          50: "#fde5e2",
+          100: "#fbc8c3",
+          200: "#f7a39d",
+          300: "#f07f77",
+          400: "#eb5e55",
+          500: "#d94f47",
+          600: "#b54039",
+          700: "#91332e",
+          800: "#6e2723",
+          900: "#4b1b19"
         },
         smoke: {
-          50: "#f5f3f0",
-          100: "#e6dfd7",
-          200: "#cfc4b7",
-          300: "#b2a395",
-          400: "#947f73",
-          500: "#77665d",
-          600: "#5f514a",
-          700: "#4a3f3a",
-          800: "#352e2a",
-          900: "#1f1a17"
+          50: "#f0f1f1",
+          100: "#e4e6e5",
+          200: "#c6d8d3",
+          300: "#b6c5c0",
+          400: "#a7b2ad",
+          500: "#8a9894",
+          600: "#717e7a",
+          700: "#58625f",
+          800: "#404846",
+          900: "#2d3331"
         },
         forge: {
-          50: "#fff3e7",
-          100: "#ffe0bf",
-          200: "#ffc48a",
-          300: "#ffa35c",
-          400: "#f47f38",
-          500: "#e06a2c",
-          600: "#bf5222",
-          700: "#9a401b",
-          800: "#7b3316",
-          900: "#652b13"
+          50: "#fee6ed",
+          100: "#fbc7d8",
+          200: "#f695b5",
+          300: "#ee5f8f",
+          400: "#e3326d",
+          500: "#d81e5b",
+          600: "#b8154a",
+          700: "#92103a",
+          800: "#6f0c2d",
+          900: "#520821"
         }
       },
       borderRadius: {
@@ -124,32 +124,11 @@ const config: Config = {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" }
-        },
-        shimmer: {
-          from: { backgroundPosition: "0 0" },
-          to: { backgroundPosition: "-200% 0" }
-        },
-        marquee: {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-100%)" }
-        },
-        "marquee-vertical": {
-          from: { transform: "translateY(0)" },
-          to: { transform: "translateY(-100%)" }
-        },
-        meteor: {
-          "0%": { transform: "rotate(215deg) translateX(0)", opacity: "1" },
-          "70%": { opacity: "1" },
-          "100%": { transform: "rotate(215deg) translateX(-500px)", opacity: "0" }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        shimmer: "shimmer 2s linear infinite",
-        marquee: "marquee 25s linear infinite",
-        "marquee-vertical": "marquee-vertical 25s linear infinite",
-        meteor: "meteor 5s linear infinite"
+        "accordion-up": "accordion-up 0.2s ease-out"
       }
     }
   },

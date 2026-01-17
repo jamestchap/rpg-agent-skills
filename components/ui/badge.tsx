@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { cn } from "../../lib/utils";
+import { AnimatedGradientText } from "./animated-gradient-text";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "default" | "subtle";
@@ -17,6 +18,7 @@ const variantStyles: Record<NonNullable<BadgeProps["variant"]>, string> = {
 export function Badge({
   className,
   variant = "default",
+  children,
   ...props
 }: BadgeProps) {
   return (
@@ -27,6 +29,19 @@ export function Badge({
         className
       )}
       {...props}
-    />
+    >
+      {variant === "default" ? (
+        <AnimatedGradientText
+          className="text-xs font-semibold uppercase tracking-[0.2em]"
+          colorFrom="#f0b74a"
+          colorTo="#4b705c"
+          speed={1.2}
+        >
+          {children}
+        </AnimatedGradientText>
+      ) : (
+        children
+      )}
+    </span>
   );
 }
