@@ -115,7 +115,7 @@ export function ModelSettingsPanel({
                 }
               }}
               placeholder={
-                isOpenRouter ? "anthropic/claude-3.5-sonnet" : "gemma2:9b"
+                isOpenRouter ? "openrouter/model-id" : "gemma2:9b"
               }
               type="text"
               value={model}

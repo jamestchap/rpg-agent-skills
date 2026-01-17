@@ -2,6 +2,15 @@
 
 RPG Skill Forge is a local-first MVP that helps you level up an agent profile and generate a `SKILL.md` file for OpenAI Codex skills and Claude skills.
 
+## Tech stack
+
+- Framework: Next.js 14.2.5
+- UI: React 18.3.1
+- Styling: Tailwind CSS 3.4.10, tailwindcss-animate 1.0.7
+- Language: TypeScript 5.5.4
+- Tooling: PostCSS 8.4.41, Autoprefixer 10.4.20
+- Linting: ESLint 8.57.0
+
 ## Features
 
 - RPG-style domain cards (Front-end, Back-end, Testing, DevOps, Databases, Accessibility, Performance, Documentation).
@@ -29,8 +38,9 @@ Then open `http://localhost:3000`.
 
 ## Ollama setup (local only)
 
-Using Ollama requires running the app locally because the model is served from
-your machine at `http://localhost:11434`. Follow these steps:
+Using Ollama requires running the app locally because the model is served from your machine at `http://localhost:11434`.
+
+Follow these steps:
 
 1. **Clone the repo and install dependencies**
 
@@ -61,8 +71,7 @@ your machine at `http://localhost:11434`. Follow these steps:
    - Use the model name you pulled (e.g. `llama3.1:8b`).
    - Keep the base URL as `http://localhost:11434` (the default).
 
-If you see “Ollama request failed,” confirm `ollama serve` is running and that
-the model name matches what you pulled.
+If you see “Ollama request failed,” confirm `ollama serve` is running and that the model name matches what you pulled.
 
 ## OpenRouter setup
 
@@ -84,7 +93,6 @@ API keys are not stored on the server.
 - `components/rpg`: RPG UI components.
 - `lib`: prompt builder, domain fragments, temperature logic.
 - `app/api/generate-skill/route.ts`: Ollama/OpenRouter adapter.
-- `examples/sample-skill.md`: example output.
 
 ## How to test generation
 

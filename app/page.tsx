@@ -36,7 +36,6 @@ const DEFAULT_LEVELS: DomainLevelMap = DOMAIN_KEYS.reduce((acc, key) => {
 
 const MAX_LEVEL = 5;
 const DEFAULT_OLLAMA_MODEL = "gemma2:9b";
-const DEFAULT_OPENROUTER_MODEL = "anthropic/claude-3.5-sonnet";
 
 type ErrorPayload = {
   error?: string;
@@ -209,9 +208,9 @@ export default function HomePage() {
     }
     if (provider === "openrouter") {
       if (!model.trim() || model === DEFAULT_OLLAMA_MODEL) {
-        setModel(DEFAULT_OPENROUTER_MODEL);
+        setModel("");
       }
-    } else if (!model.trim() || model === DEFAULT_OPENROUTER_MODEL) {
+    } else if (!model.trim()) {
       setModel(DEFAULT_OLLAMA_MODEL);
     }
     previousProviderRef.current = provider;
