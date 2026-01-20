@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="RPG">
+  <rect width="512" height="512" fill="#1f1b16"/>
+  <rect x="32" y="32" width="448" height="448" rx="72" fill="#2e2821"/>
+  <text
+    x="256"
+    y="300"
+    text-anchor="middle"
+    font-family="Trebuchet MS, Georgia, serif"
+    font-size="200"
+    font-weight="700"
+    fill="#f4c76f"
+    letter-spacing="8"
+  >
+    RPG
+  </text>
+</svg>

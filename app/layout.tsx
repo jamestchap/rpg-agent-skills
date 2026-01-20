@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "RPG Skill Forge",
+  title: "RPG AI Skill Forge",
   description: "Level up an agent profile and generate a SKILL.md file."
 };
 

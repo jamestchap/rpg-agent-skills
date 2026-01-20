@@ -1,6 +1,6 @@
-# RPG Skill Forge
+# RPG AI Skill Forge
 
-RPG Skill Forge is a local-first MVP that helps you level up an agent profile and generate a `SKILL.md` file for OpenAI Codex skills and Claude skills.
+RPG AI Skill Forge is a local-first MVP that helps you level up an agent profile and generate a `SKILL.md` file for OpenAI Codex skills and Claude skills.
 
 ## Tech stack
 
@@ -8,6 +8,7 @@ RPG Skill Forge is a local-first MVP that helps you level up an agent profile an
 - UI: React 18.3.1
 - Styling: Tailwind CSS 3.4.10, tailwindcss-animate 1.0.7
 - Language: TypeScript 5.5.4
+- Validation: Zod 3.23.8
 - Tooling: PostCSS 8.4.41, Autoprefixer 10.4.20
 - Linting: ESLint 8.57.0
 
@@ -112,6 +113,7 @@ Commands:
 
 - `npm install`
 - `npm run dev`
+- `npm run lint`
 
 Key files:
 
